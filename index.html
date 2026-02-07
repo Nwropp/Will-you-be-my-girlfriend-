@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เป็นแฟนกันไหม 💗</title>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("PUBLIC_KEY_ของคุณ");
+  })();
+</script>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    overflow: hidden;
+    transition: background 0.5s;
+  }
+
+  .card {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  button {
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: none;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  #yes {
+    background: #ff4f9a;
+    color: white;
+  }
+
+  #no {
+    background: white;
+  }
+
+  /* หน้า YES */
+  .yes-page {
+    display: none;
+    text-align: center;
+  }
+
+  /* ฝน */
+  .rain {
+    position: fixed;
+    width: 2px;
+    height: 10px;
+    background: #aaa;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(100vh);
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- เพลง -->
+<audio id="bgm" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card" id="main">
+  <h1>เป็นแฟนกันไหม 💕</h1>
+  <button id="yes">เป็น 💗</button>
+  <button id="no">ไม่เป็น 🙃</button>
+</div>
+
+<div class="yes-page" id="yesPage">
+  <h1>เย้! 💖</h1>
+  <p>ขอบคุณที่ตอบตกลงนะ</p>
+</div>
+
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const main = document.getElementById("main");
+  const yesPage = document.getElementById("yesPage");
+  const bgm = document.getElementById("bgm");
+
+  // เล่นเพลงหลังมีการกด (กัน browser บล็อก)
+  document.body.addEventListener("click", () => {
+    bgm.play();
+  }, { once: true });
+
+  // ปุ่มไม่เป็นหนี
+  noBtn.addEventListener("mouseover", moveNo);
+  noBtn.addEventListener("touchstart", moveNo);
+
+  function moveNo() {
+    noBtn.style.position = "absolute";
+    noBtn.style.left = Math.random() * 80 + "%";
+    noBtn.style.top = Math.random() * 80 + "%";
+  }
+
+  // กดไม่เป็น
+  noBtn.addEventListener("click", () => {
+    document.body.style.background = "#999";
+    sendEmail("ไม่เป็น");
+
+    for (let i = 0; i < 100; i++) {
+      const rain = document.createElement("div");
+      rain.className = "rain";
+      rain.style.left = Math.random() * 100 + "vw";
+      rain.style.animationDuration = (Math.random() * 2 + 1) + "s";
+      document.body.appendChild(rain);
+    }
+  });
+
+  // กดเป็น
+  yesBtn.addEventListener("click", () => {
+    sendEmail("เป็น");
+    main.style.display = "none";
+    yesPage.style.display = "block";
+  });
+
+  // ส่งเมล
+  function sendEmail(answer) {
+    emailjs.send("SERVICE_ID", "TEMPLATE_ID", {
+      answer: answer,
+      time: new Date().toLocaleString()
+    });
+  }
+</script>
+
+</body>
+</html>
